@@ -24,7 +24,7 @@ jobs:
       - name: Run src/ingest.py
         env:
           MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
-        run: python ingest.py
+        run: python src/ingest.py
 
       - name: Show run summary
         if: always()
