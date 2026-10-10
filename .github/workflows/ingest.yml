@@ -1,0 +1,31 @@
+name: Ingest diabetes.csv vao MotherDuck (Bronze)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    name: Load raw data -> DIABETES.bronze.diabetes_raw
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install --no-cache-dir duckdb==1.5.6 pandas
+
+      - name: Run ingest.py
+        env:
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+        run: python ingest.py
+
+      - name: Show run summary
+        if: always()
+        run: echo "Ingest finished at $(date -u) with status ${{ job.status }}"
