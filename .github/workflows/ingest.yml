@@ -24,6 +24,7 @@ jobs:
       - name: Run src/ingest.py
         env:
           MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+          CSV_PATH: data/diabetes.csv
         run: python src/ingest.py
 
       - name: Show run summary
