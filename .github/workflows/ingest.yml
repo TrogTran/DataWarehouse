@@ -1,11 +1,11 @@
-name: Ingest diabetes.csv vao MotherDuck (Bronze)
+name: Ingest diabetes.csv to BigQuery (Bronze)
 
 on:
   workflow_dispatch:
 
 jobs:
   ingest:
-    name: Load raw data -> DIABETES.bronze.diabetes_raw
+    name: Load raw data -> diabetes-pipeline-511509.bronze.diabetes_raw
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -19,11 +19,16 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install --no-cache-dir duckdb==1.5.6 pandas
+        run: pip install --no-cache-dir pandas google-cloud-bigquery db-dtypes
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Run src/ingest.py
         env:
-          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+          GCP_PROJECT_ID: "diabetes-pipeline-511509"
           CSV_PATH: data/diabetes.csv
         run: python src/ingest.py
 
