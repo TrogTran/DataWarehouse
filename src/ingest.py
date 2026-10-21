@@ -44,6 +44,11 @@ def load_raw(path):
     # dtype=str: giu nguyen dang chuoi
     # keep_default_na=False: khong tu dong bien chuoi rong thanh NaN
     df = pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig")
+    
+    # BigQuery khong cho phep ten cot chua dau cham (.).
+    # Thay the tat ca dau '.' bang '_' de tranh loi 400 BadRequest.
+    df.columns = [col.replace('.', '_') for col in df.columns]
+    
     return df
 
 
